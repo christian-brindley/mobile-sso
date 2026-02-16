@@ -1,0 +1,422 @@
+{
+  "meta": {
+    "origin": "https://openam-brindley.forgeblocks.com/platform/?realm=alpha#/journeys/Mobile%20SSO%20-%20Initialise",
+    "exportedBy": "christian.brindley@pingidentity.com",
+    "exportDate": "2026-02-04T17:18:55.575Z",
+    "exportTool": "platform-admin ui tree export",
+    "exportToolVersion": "1.0",
+    "treesSelectedForExport": [
+      "Mobile SSO - Initialise"
+    ],
+    "innerTreesIncluded": []
+  },
+  "trees": {
+    "Mobile SSO - Initialise": {
+      "tree": {
+        "_id": "Mobile SSO - Initialise",
+        "_rev": "362019588",
+        "identityResource": "managed/alpha_user",
+        "entryNodeId": "b93173e5-cff5-411c-ad06-7ae7eb5414dc",
+        "innerTreeOnly": false,
+        "noSession": true,
+        "mustRun": false,
+        "enabled": true,
+        "transactionalOnly": false,
+        "uiConfig": {
+          "annotations": "{\"forNodes\":{},\"structural\":[]}",
+          "categories": "[]"
+        },
+        "nodes": {
+          "0e585487-64a5-4e6e-a6a8-2535216f44f3": {
+            "connections": {
+              "outcome": "e301438c-0bd0-429c-ab0c-66126501069a"
+            },
+            "displayName": "Invalid Token Error",
+            "nodeType": "SetFailureDetailsNode",
+            "x": 191,
+            "y": 407
+          },
+          "1236364b-4b6e-4a9b-8216-ad980786b91c": {
+            "connections": {
+              "outcome": "e301438c-0bd0-429c-ab0c-66126501069a"
+            },
+            "displayName": "No Token Error",
+            "nodeType": "SetFailureDetailsNode",
+            "x": 191,
+            "y": 487
+          },
+          "3135581a-7b84-4c26-8975-52352f7f0b28": {
+            "connections": {
+              "outcome": "e301438c-0bd0-429c-ab0c-66126501069a"
+            },
+            "displayName": "Claim Error",
+            "nodeType": "SetFailureDetailsNode",
+            "x": 190,
+            "y": 567.91796875
+          },
+          "72f08a2d-414b-4043-8b81-fd7fdfae729d": {
+            "connections": {
+              "outcome": "e301438c-0bd0-429c-ab0c-66126501069a"
+            },
+            "displayName": "Client Error",
+            "nodeType": "SetFailureDetailsNode",
+            "x": 189,
+            "y": 648.91796875
+          },
+          "76dcb8c5-766a-4923-8ed8-ae44b95e52ad": {
+            "connections": {
+              "created": "d9fb69dc-9a5a-4680-9f89-3a0d7d9c734b",
+              "error": "dc4de8a2-c0bb-4f2b-88a7-e602375cc7af",
+              "unknown": "bccea4fd-21c1-4548-a77a-785989ca49b8"
+            },
+            "displayName": "Backchannel Initialize",
+            "nodeType": "BackChannelInitNode",
+            "x": 720,
+            "y": 171.5
+          },
+          "88513561-de00-417a-8ff8-bf1ffaad53d4": {
+            "connections": {
+              "Error": "76dcb8c5-766a-4923-8ed8-ae44b95e52ad",
+              "Missing Headers": "76dcb8c5-766a-4923-8ed8-ae44b95e52ad",
+              "OK": "76dcb8c5-766a-4923-8ed8-ae44b95e52ad"
+            },
+            "displayName": "SSO URL",
+            "nodeType": "designer-headerstostate",
+            "x": 465,
+            "y": 165.91796875
+          },
+          "b93173e5-cff5-411c-ad06-7ae7eb5414dc": {
+            "connections": {
+              "Error": "dc4de8a2-c0bb-4f2b-88a7-e602375cc7af",
+              "Failed Claims": "3135581a-7b84-4c26-8975-52352f7f0b28",
+              "Invalid Token": "0e585487-64a5-4e6e-a6a8-2535216f44f3",
+              "No Token": "1236364b-4b6e-4a9b-8216-ad980786b91c",
+              "Unlisted Client": "72f08a2d-414b-4043-8b81-fd7fdfae729d",
+              "Valid Token": "88513561-de00-417a-8ff8-bf1ffaad53d4"
+            },
+            "displayName": "OAuth2 Introspect",
+            "nodeType": "designer-oauth2introspect",
+            "x": 192,
+            "y": 164.5
+          },
+          "bccea4fd-21c1-4548-a77a-785989ca49b8": {
+            "connections": {
+              "outcome": "e301438c-0bd0-429c-ab0c-66126501069a"
+            },
+            "displayName": "User Error",
+            "nodeType": "SetFailureDetailsNode",
+            "x": 970,
+            "y": 465
+          },
+          "d9fb69dc-9a5a-4680-9f89-3a0d7d9c734b": {
+            "connections": {
+              "true": "70e691a5-1e33-4ac3-a356-e7b6d60d92e0"
+            },
+            "displayName": "Set Success URL",
+            "nodeType": "ScriptedDecisionNode",
+            "x": 991,
+            "y": 177.91796875
+          },
+          "dc4de8a2-c0bb-4f2b-88a7-e602375cc7af": {
+            "connections": {
+              "outcome": "e301438c-0bd0-429c-ab0c-66126501069a"
+            },
+            "displayName": "Internal Error",
+            "nodeType": "SetFailureDetailsNode",
+            "x": 969,
+            "y": 380.66666666666674
+          }
+        },
+        "staticNodes": {
+          "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {
+            "x": 1234,
+            "y": 181.83333333333331
+          },
+          "e301438c-0bd0-429c-ab0c-66126501069a": {
+            "x": 1258,
+            "y": 630.5
+          },
+          "startNode": {
+            "x": 70,
+            "y": 256.5
+          }
+        }
+      },
+      "nodes": {
+        "0e585487-64a5-4e6e-a6a8-2535216f44f3": {
+          "_id": "0e585487-64a5-4e6e-a6a8-2535216f44f3",
+          "_rev": "988279191",
+          "failureMessage": {
+            "en": "Invalid token"
+          },
+          "failureDetails": {},
+          "_type": {
+            "_id": "SetFailureDetailsNode",
+            "name": "Set Failure Details",
+            "collection": true,
+            "version": "1.0"
+          },
+          "_outcomes": [
+            {
+              "id": "outcome",
+              "displayName": "Outcome"
+            }
+          ]
+        },
+        "1236364b-4b6e-4a9b-8216-ad980786b91c": {
+          "_id": "1236364b-4b6e-4a9b-8216-ad980786b91c",
+          "_rev": "1551695282",
+          "failureMessage": {
+            "en": "No token provided"
+          },
+          "failureDetails": {},
+          "_type": {
+            "_id": "SetFailureDetailsNode",
+            "name": "Set Failure Details",
+            "collection": true,
+            "version": "1.0"
+          },
+          "_outcomes": [
+            {
+              "id": "outcome",
+              "displayName": "Outcome"
+            }
+          ]
+        },
+        "3135581a-7b84-4c26-8975-52352f7f0b28": {
+          "_id": "3135581a-7b84-4c26-8975-52352f7f0b28",
+          "_rev": "1462186087",
+          "failureMessage": {
+            "en": "Missing or invalid claims"
+          },
+          "failureDetails": {},
+          "_type": {
+            "_id": "SetFailureDetailsNode",
+            "name": "Set Failure Details",
+            "collection": true,
+            "version": "1.0"
+          },
+          "_outcomes": [
+            {
+              "id": "outcome",
+              "displayName": "Outcome"
+            }
+          ]
+        },
+        "72f08a2d-414b-4043-8b81-fd7fdfae729d": {
+          "_id": "72f08a2d-414b-4043-8b81-fd7fdfae729d",
+          "_rev": "-28625759",
+          "failureMessage": {
+            "en": "Unknown client"
+          },
+          "failureDetails": {},
+          "_type": {
+            "_id": "SetFailureDetailsNode",
+            "name": "Set Failure Details",
+            "collection": true,
+            "version": "1.0"
+          },
+          "_outcomes": [
+            {
+              "id": "outcome",
+              "displayName": "Outcome"
+            }
+          ]
+        },
+        "76dcb8c5-766a-4923-8ed8-ae44b95e52ad": {
+          "_id": "76dcb8c5-766a-4923-8ed8-ae44b95e52ad",
+          "_rev": "419279786",
+          "redirectUrlType": "GET",
+          "usernameKey": "username",
+          "dataKey": "backchannelJourneyState",
+          "idType": "USER",
+          "tree": "Mobile SSO - Login",
+          "timeout": 30,
+          "_type": {
+            "_id": "BackChannelInitNode",
+            "name": "Backchannel Initialize",
+            "collection": true,
+            "version": "1.0"
+          },
+          "_outcomes": [
+            {
+              "id": "created",
+              "displayName": "Created"
+            },
+            {
+              "id": "unknown",
+              "displayName": "Unknown Subject"
+            },
+            {
+              "id": "error",
+              "displayName": "Error"
+            }
+          ]
+        },
+        "88513561-de00-417a-8ff8-bf1ffaad53d4": {
+          "_id": "88513561-de00-417a-8ff8-bf1ffaad53d4",
+          "_rev": "1060646095",
+          "headers": {
+            "x-sso-location": "backchannelJourneyState.successUrl"
+          },
+          "_type": {
+            "_id": "designer-headerstostate",
+            "name": "Headers to State",
+            "collection": true,
+            "version": "1.0"
+          },
+          "_outcomes": [
+            {
+              "id": "OK",
+              "displayName": "OK"
+            },
+            {
+              "id": "Missing Headers",
+              "displayName": "Missing Headers"
+            },
+            {
+              "id": "Error",
+              "displayName": "Error"
+            }
+          ]
+        },
+        "b93173e5-cff5-411c-ad06-7ae7eb5414dc": {
+          "_id": "b93173e5-cff5-411c-ad06-7ae7eb5414dc",
+          "_rev": "970628868",
+          "clientAuthenticationMethod": "SECRET_POST",
+          "clientSecret": "password",
+          "requiredClaims": {},
+          "allowedClients": [],
+          "mapAttributesToState": {
+            "backchannelJourneyState.username": "user_id",
+            "username": "user_id"
+          },
+          "bearerType": "AUTHZ_HEADER",
+          "clientId": "demo-introspect",
+          "saveResults": true,
+          "introspectEndpoint": "https://&{esv.fqdn}/am/oauth2/realms/root/realms/alpha/introspect",
+          "_type": {
+            "_id": "designer-oauth2introspect",
+            "name": "OAuth2 Introspect",
+            "collection": true,
+            "version": "1.0"
+          },
+          "_outcomes": [
+            {
+              "id": "Valid Token",
+              "displayName": "Valid Token"
+            },
+            {
+              "id": "Invalid Token",
+              "displayName": "Invalid Token"
+            },
+            {
+              "id": "No Token",
+              "displayName": "No Token"
+            },
+            {
+              "id": "Failed Claims",
+              "displayName": "Failed Claims"
+            },
+            {
+              "id": "Unlisted Client",
+              "displayName": "Unlisted Client"
+            },
+            {
+              "id": "Error",
+              "displayName": "Error"
+            }
+          ]
+        },
+        "bccea4fd-21c1-4548-a77a-785989ca49b8": {
+          "_id": "bccea4fd-21c1-4548-a77a-785989ca49b8",
+          "_rev": "-659008682",
+          "failureMessage": {
+            "en": "Unknown user"
+          },
+          "failureDetails": {},
+          "_type": {
+            "_id": "SetFailureDetailsNode",
+            "name": "Set Failure Details",
+            "collection": true,
+            "version": "1.0"
+          },
+          "_outcomes": [
+            {
+              "id": "outcome",
+              "displayName": "Outcome"
+            }
+          ]
+        },
+        "d9fb69dc-9a5a-4680-9f89-3a0d7d9c734b": {
+          "_id": "d9fb69dc-9a5a-4680-9f89-3a0d7d9c734b",
+          "_rev": "-1019848223",
+          "script": "dd0d6406-0e1a-4770-acee-96310d9de3c1",
+          "outcomes": [
+            "true"
+          ],
+          "outputs": [
+            "*"
+          ],
+          "inputs": [
+            "*"
+          ],
+          "_type": {
+            "_id": "ScriptedDecisionNode",
+            "name": "Scripted Decision",
+            "collection": true,
+            "version": "1.0"
+          },
+          "_outcomes": [
+            {
+              "id": "true",
+              "displayName": "true"
+            }
+          ]
+        },
+        "dc4de8a2-c0bb-4f2b-88a7-e602375cc7af": {
+          "_id": "dc4de8a2-c0bb-4f2b-88a7-e602375cc7af",
+          "_rev": "-1417533653",
+          "failureMessage": {
+            "en": "Internal error"
+          },
+          "failureDetails": {},
+          "_type": {
+            "_id": "SetFailureDetailsNode",
+            "name": "Set Failure Details",
+            "collection": true,
+            "version": "1.0"
+          },
+          "_outcomes": [
+            {
+              "id": "outcome",
+              "displayName": "Outcome"
+            }
+          ]
+        }
+      },
+      "innerNodes": {},
+      "scripts": {
+        "dd0d6406-0e1a-4770-acee-96310d9de3c1": {
+          "_id": "dd0d6406-0e1a-4770-acee-96310d9de3c1",
+          "name": "demo-backchannel-set-success-url",
+          "description": null,
+          "script": "\"nodeState.putShared(\\\"successUrl\\\", nodeState.get(\\\"backchannel-redirectUri\\\"));\\naction.goTo(\\\"true\\\");\"",
+          "default": false,
+          "language": "JAVASCRIPT",
+          "context": "AUTHENTICATION_TREE_DECISION_NODE",
+          "createdBy": "id=c2d4610e-e014-4539-b76e-20b61f8db263,ou=user,ou=am-config",
+          "creationDate": 1768214229009,
+          "lastModifiedBy": "id=c2d4610e-e014-4539-b76e-20b61f8db263,ou=user,ou=am-config",
+          "lastModifiedDate": 1768214357893,
+          "evaluatorVersion": "2.0"
+        }
+      },
+      "emailTemplates": {},
+      "socialIdentityProviders": {},
+      "themes": [],
+      "saml2Entities": {},
+      "circlesOfTrust": {}
+    }
+  }
+}

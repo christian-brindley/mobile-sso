@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "amVersion": "ForgeRock Access Management 8.1.0-SNAPSHOT Build d2b1c6141dcd7bf8e4fd4874aebeaca5a7e4c8da (2026-January-29 15:09)",
+    "exportDate": "2026-02-04T17:43:13.219Z",
+    "origin": "https://openam-brindley.forgeblocks.com/am/json/node-designer/node-type/",
+    "exportedBy": "christian.brindley@pingidentity.com",
+    "resourceVersion": "1.0"
+  },
+  "nodeTypes": {
+    "headerstostate-1": {
+      "serviceName": "headerstostate",
+      "displayName": "DEMO Headers to State",
+      "description": "Disclaimer\n\nTHE CODE HEREUNDER IS PROVIDED \"AS IS\" AND WITHOUT WARRANTY OF ANY KIND.\nSUCH CODE IS EXPRESSLY EXCLUDED FROM FORGEROCK'S INDEMNITY OR SUPPORT\nOBLIGATIONS, IF ANY, PURSUANT TO THE RELEVANT GOVERNING AGREEMENT.\nPING AND ITS LICENSORS EXPRESSLY DISCLAIM ALL WARRANTIES, WHETHER\nEXPRESS, IMPLIED OR STATUTORY, INCLUDING, WITHOUT LIMITATION, THE IMPLIED\nWARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND ANY\nWARRANTY OF NON-INFRINGEMENT. PING SHALL NOT HAVE ANY LIABILITY ARISING\nOUT OF OR RELATING TO ANY USE, IMPLEMENTATION OR CONFIGURATION OF THE SAMPLE\nCODE HEREUNDER.",
+      "outcomes": [
+        "OK",
+        "Missing Headers",
+        "Error"
+      ],
+      "outputs": [],
+      "inputs": [],
+      "script": "\"use strict\";\n\n// imports/common/node-base.ts\nfunction execNode(handlerFunction, errorOutcome) {\n  try {\n    handlerFunction();\n  } catch (e) {\n    logger.error(\"Exception: \" + e);\n    logger.debug(\"Stack trace \" + e.stack);\n    action.goTo(errorOutcome);\n  }\n}\n\n// imports/common/state.ts\nfunction putStatePath(path, value) {\n  var transient = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;\n  var keys = path.split(\".\");\n  var rootKey = keys[0];\n  var newValue = null;\n  if (keys.length === 1) {\n    newValue = value;\n  } else {\n    var existing = nodeState.get(rootKey) || {};\n    newValue = existing;\n    for (var i = 1; i < keys.length - 1; i++) {\n      var key = keys[i];\n      newValue[key] = newValue[key] || {};\n      newValue = newValue[key];\n    }\n    newValue[keys[keys.length - 1]] = value;\n  }\n  if (transient) {\n    nodeState.putTransient(rootKey, newValue);\n  } else {\n    nodeState.putShared(rootKey, newValue);\n  }\n}\n\n// imports/common/http.ts\nfunction getHttpHeader(headerName) {\n  var header = requestHeaders.get(headerName);\n  return header ? String(header.get(0)) : null;\n}\n\n// packages/headers-to-state/src/headers-to-state.ts\nvar nodeOutcomes = {\n  OK: \"OK\",\n  MISSING_HEADERS: \"Missing Headers\",\n  ERROR: \"Error\"\n};\nexecNode(function () {\n  var missingHeaders = false;\n  Object.keys(properties.headers).forEach(function (headerName) {\n    logger.debug(\"Reading header \" + headerName);\n    var statePath = properties.headers[headerName];\n    var headerValue = getHttpHeader(headerName);\n    if (!headerValue) {\n      logger.debug(\"Header not found - continuing\");\n      missingHeaders = true;\n      return;\n    }\n    logger.debug(\"Saving header \".concat(headerName, \" value \").concat(headerValue, \" to state variable \").concat(statePath));\n    putStatePath(statePath, headerValue);\n  });\n  action.goTo(missingHeaders ? nodeOutcomes.MISSING_HEADERS : nodeOutcomes.OK);\n}, nodeOutcomes.ERROR);",
+      "errorOutcome": false,
+      "tags": [
+        "demo-1"
+      ],
+      "properties": {
+        "headers": {
+          "title": "HTTP Headers",
+          "description": "HTTP headers to process. Key is the header name - e.g. \"x-location-city\", and value is the shared state variable name - e.g. \"location\" or \"location.city\"",
+          "type": "OBJECT",
+          "required": false,
+          "multivalued": false
+        }
+      }
+    }
+  }
+}

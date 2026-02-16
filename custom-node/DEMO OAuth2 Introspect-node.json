@@ -1,0 +1,124 @@
+{
+  "meta": {
+    "amVersion": "ForgeRock Access Management 8.1.0-SNAPSHOT Build d2b1c6141dcd7bf8e4fd4874aebeaca5a7e4c8da (2026-January-29 15:09)",
+    "exportDate": "2026-02-04T17:43:20.543Z",
+    "origin": "https://openam-brindley.forgeblocks.com/am/json/node-designer/node-type/",
+    "exportedBy": "christian.brindley@pingidentity.com",
+    "resourceVersion": "1.0"
+  },
+  "nodeTypes": {
+    "oauth2introspect-1": {
+      "serviceName": "oauth2introspect",
+      "displayName": "DEMO OAuth2 Introspect",
+      "description": "Disclaimer\n\nTHE CODE HEREUNDER IS PROVIDED \"AS IS\" AND WITHOUT WARRANTY OF ANY KIND.\nSUCH CODE IS EXPRESSLY EXCLUDED FROM FORGEROCK'S INDEMNITY OR SUPPORT\nOBLIGATIONS, IF ANY, PURSUANT TO THE RELEVANT GOVERNING AGREEMENT.\nPING AND ITS LICENSORS EXPRESSLY DISCLAIM ALL WARRANTIES, WHETHER\nEXPRESS, IMPLIED OR STATUTORY, INCLUDING, WITHOUT LIMITATION, THE IMPLIED\nWARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND ANY\nWARRANTY OF NON-INFRINGEMENT. PING SHALL NOT HAVE ANY LIABILITY ARISING\nOUT OF OR RELATING TO ANY USE, IMPLEMENTATION OR CONFIGURATION OF THE SAMPLE\nCODE HEREUNDER.",
+      "outcomes": [
+        "Valid Token",
+        "Invalid Token",
+        "No Token",
+        "Failed Claims",
+        "Unlisted Client",
+        "Error"
+      ],
+      "outputs": [],
+      "inputs": [],
+      "script": "\"use strict\";\n\n// imports/common/node-base.ts\nfunction execNode(handlerFunction, errorOutcome) {\n  try {\n    handlerFunction();\n  } catch (e) {\n    logger.error(\"Exception: \" + e);\n    logger.debug(\"Stack trace \" + e.stack);\n    action.goTo(errorOutcome);\n  }\n}\n\n// imports/common/http.ts\nfunction getHttpHeader(headerName) {\n  var headerValues = requestHeaders.get(headerName);\n  return headerValues ? String(headerValues.get(0)) : null;\n}\nfunction getUrlParameter(parameterName) {\n  var parameterValues = requestParameters.get(parameterName);\n  return parameterValues ? String(parameterValues.get(0)) : null;\n}\nfunction basicAuthHeader(user, password) {\n  return \"Basic \".concat(utils.base64.encode(\"\".concat(user, \":\").concat(password)));\n}\n\n// imports/oauth2/introspect.ts\nfunction introspectAccessToken(introspectEndpoint, httpRetries, accessToken, clientId, clientSecret, clientProfile, clientAuthMethod) {\n  var requestBody = \"token=\".concat(encodeURIComponent(accessToken));\n  var headers = {\n    \"content-type\": \"application/x-www-form-urlencoded\"\n  };\n  switch (clientAuthMethod) {\n    case \"SECRET_POST\":\n      requestBody = \"\".concat(requestBody, \"&client_id=\").concat(encodeURIComponent(clientId), \"&client_secret=\").concat(encodeURIComponent(clientSecret));\n      break;\n    case \"SECRET_BASIC\":\n      headers[\"authorization\"] = basicAuthHeader(clientId, clientSecret);\n      break;\n    default:\n      logger.error(\"unknown auth method \" + clientAuthMethod);\n      return null;\n  }\n  logger.debug(\"Calling introspect endpoint \" + introspectEndpoint);\n  logger.debug(\"Request body \" + JSON.stringify(requestBody));\n  var response = null;\n  for (var attempt = 0; attempt < httpRetries; attempt++) {\n    logger.debug(\"Attempt \" + (attempt + 1) + \" of \" + httpRetries);\n    try {\n      var options = {\n        method: \"POST\",\n        body: requestBody,\n        headers: headers\n      };\n      if (clientProfile && clientProfile !== \"\") {\n        options.clientName = clientProfile;\n      }\n      logger.debug(\"Request: \" + JSON.stringify(options));\n      response = httpClient.send(introspectEndpoint, options).get();\n      if (response) {\n        logger.debug(\"Got response\");\n        break;\n      }\n    } catch (e) {\n      logger.error(\"Exception calling introspect endpoint \" + e);\n    }\n  }\n  if (!response) {\n    logger.error(\"Bad response\");\n    return null;\n  }\n  var status = response.status;\n  logger.debug(\"Status \" + status + \" Response \" + JSON.stringify(response.text()));\n  if (response.ok) {\n    return response.json();\n  }\n  logger.error(\"Bad status\");\n  return null;\n}\n\n// imports/common/state.ts\nfunction putStatePath(path, value) {\n  var transient = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;\n  var keys = path.split(\".\");\n  var rootKey = keys[0];\n  var newValue = null;\n  if (keys.length === 1) {\n    newValue = value;\n  } else {\n    var existing = nodeState.get(rootKey) || {};\n    newValue = existing;\n    for (var i = 1; i < keys.length - 1; i++) {\n      var key = keys[i];\n      newValue[key] = newValue[key] || {};\n      newValue = newValue[key];\n    }\n    newValue[keys[keys.length - 1]] = value;\n  }\n  if (transient) {\n    nodeState.putTransient(rootKey, newValue);\n  } else {\n    nodeState.putShared(rootKey, newValue);\n  }\n}\n\n// packages/oauth2-introspect/src/oauth2-introspect.ts\nvar nodeOutcomes = {\n  VALID: \"Valid Token\",\n  INVALID: \"Invalid Token\",\n  NO_TOKEN: \"No Token\",\n  FAILED_CLAIMS: \"Failed Claims\",\n  UNLISTED_CLIENT: \"Unlisted Client\",\n  ERROR: \"Error\"\n};\nvar BEARER_TYPE = {\n  AUTHZ_HEADER: \"AUTHZ_HEADER\",\n  CUSTOM_HEADER: \"CUSTOM_HEADER\",\n  CALLBACK: \"CALLBACK\",\n  STATE: \"STATE\",\n  URL_PARAMETER: \"URL_PARAMETER\"\n};\nvar REQUEST_RETRIES = 3;\nvar SHARED_STATE_RESULT = \"tokenIntrospectResult\";\nfunction getToken(bearerType) {\n  var token = null;\n  switch (bearerType) {\n    case BEARER_TYPE.AUTHZ_HEADER:\n      logger.debug(\"Getting bearer token from authz header\");\n      token = getHttpHeader(\"authorization\");\n      break;\n    case BEARER_TYPE.CUSTOM_HEADER:\n      logger.debug(\"Getting bearer token from header \".concat(properties.bearerIdentifier));\n      token = getHttpHeader(properties.bearerIdentifier);\n      break;\n    case BEARER_TYPE.STATE:\n      logger.debug(\"Getting token from state variable \".concat(properties.bearerIdentifier));\n      token = nodeState.get(properties.bearerIdentifier);\n      break;\n    case BEARER_TYPE.URL_PARAMETER:\n      logger.debug(\"Getting token url parameter \".concat(properties.bearerIdentifier));\n      token = getUrlParameter(properties.bearerIdentifier);\n      break;\n    default:\n      logger.error(\"Unsupported bearer type: \\\"\".concat(bearerType, \"\\\"\"));\n      return null;\n  }\n  return token ? token.trim().replace(/^bearer\\s+/i, \"\") : null;\n}\nexecNode(function () {\n  var token = null;\n  if (properties.bearerType === BEARER_TYPE.CALLBACK) {\n    if (callbacks.isEmpty()) {\n      callbacksBuilder.stringAttributeInputCallback(\"token\", \"Token\", \"\", true);\n      return;\n    }\n    token = callbacks.getStringAttributeInputCallbacks().get(0);\n  } else {\n    token = getToken(properties.bearerType);\n  }\n  if (!token) {\n    logger.error(\"No token found\");\n    action.goTo(nodeOutcomes.NO_TOKEN);\n    return;\n  }\n  var introspectEndpoint = properties.introspectEndpoint;\n  if (!introspectEndpoint) {\n    logger.error(\"No introspect endpoint configured\");\n    action.goTo(nodeOutcomes.ERROR);\n    return;\n  }\n  logger.debug(\"Sending token introspect request to endpoint \" + introspectEndpoint);\n  var introspectResult = introspectAccessToken(introspectEndpoint, REQUEST_RETRIES, token, properties.clientId, properties.clientSecret, properties.clientProfile, properties.clientAuthenticationMethod);\n  if (!introspectResult) {\n    logger.error(\"Bad introspect result\");\n    action.goTo(nodeOutcomes.ERROR);\n    return;\n  }\n  if (!introspectResult.active) {\n    logger.error(\"Invalid access token\");\n    action.goTo(nodeOutcomes.INVALID);\n    return;\n  }\n  if (properties.requiredClaims) {\n    var failed = false;\n    Object.keys(properties.requiredClaims).forEach(function (requiredClaim) {\n      var requiredValue = properties.requiredClaims[requiredClaim];\n      var value = introspectResult[requiredClaim];\n      if (typeof value === \"undefined\") {\n        logger.debug(\"Claim \".concat(requiredClaim, \" not found in introspect results\"));\n        failed = true;\n        return;\n      }\n      if (value !== requiredValue) {\n        logger.debug(\"Value for \".concat(requiredClaim, \" (\").concat(value, \") does not match required value (\").concat(requiredValue, \")\"));\n        failed = true;\n        return;\n      }\n    });\n    if (failed) {\n      action.goTo(nodeOutcomes.FAILED_CLAIMS);\n      return;\n    }\n  }\n  if (properties.allowedClients && properties.allowedClients.length > 0) {\n    var clientId = introspectResult.client_id;\n    logger.debug(\"Checking client id \".concat(clientId));\n    if (!clientId) {\n      logger.error(\"No client_id in introspect results\");\n      action.goTo(nodeOutcomes.UNLISTED_CLIENT);\n      return;\n    }\n    var clientFound = false;\n    properties.allowedClients.forEach(function (allowedClient) {\n      logger.debug(\"Checking against allowed client \".concat(allowedClient));\n      if (clientId === allowedClient) {\n        logger.debug(\"Matched client\");\n        clientFound = true;\n      }\n    });\n    if (!clientFound) {\n      logger.error(\"Client not found in allowlist\");\n      action.goTo(nodeOutcomes.UNLISTED_CLIENT);\n      return;\n    }\n  }\n  if (properties.saveResults) {\n    logger.debug(\"Saving to state\");\n    nodeState.putShared(SHARED_STATE_RESULT, introspectResult);\n  }\n  if (properties.mapAttributesToState) {\n    Object.keys(properties.mapAttributesToState).forEach(function (statePath) {\n      var claim = properties.mapAttributesToState[statePath];\n      var value = introspectResult[claim];\n      putStatePath(statePath, value);\n    });\n  }\n  action.goTo(nodeOutcomes.VALID);\n}, nodeOutcomes.ERROR);",
+      "errorOutcome": false,
+      "tags": [
+        "demo-1"
+      ],
+      "properties": {
+        "clientId": {
+          "title": "Client ID",
+          "description": "OAuth2 client ID for introspection request",
+          "type": "STRING",
+          "required": false,
+          "multivalued": false
+        },
+        "clientSecret": {
+          "title": "Client Secret",
+          "description": "OAuth2 client secret for introspection request. NB: use a secret placeholder rather than plain text",
+          "type": "STRING",
+          "required": false,
+          "multivalued": false
+        },
+        "clientAuthenticationMethod": {
+          "title": "Client Authentication",
+          "description": "OAuth2 client authentication type for introspection",
+          "type": "STRING",
+          "required": true,
+          "defaultValue": "SECRET_POST",
+          "options": {
+            "SECRET_BASIC": "Client Secret Basic",
+            "SECRET_POST": "Client Secret POST"
+          },
+          "multivalued": false
+        },
+        "introspectEndpoint": {
+          "title": "Introspect Endpoint",
+          "description": "OAuth2 introspect endpoint - leave blank for local introspection",
+          "type": "STRING",
+          "required": false,
+          "multivalued": false
+        },
+        "clientProfile": {
+          "title": "HTTP Client Profile",
+          "description": "HTTP client profile to use. Must be configured in HTTP client service. Leave blank for no profile",
+          "type": "STRING",
+          "required": false,
+          "multivalued": false
+        },
+        "bearerType": {
+          "title": "Token Bearer Type",
+          "description": "Specify how the token is presented - as an authorisation header, a callback shared state variable, or URL parameter. URL parameter to be used with caution",
+          "type": "STRING",
+          "required": true,
+          "defaultValue": "AUTHZ_HEADER",
+          "options": {
+            "CALLBACK": "String Input",
+            "STATE": "Shared State",
+            "CUSTOM_HEADER": "Custom Header",
+            "URL_PARAMETER": "URL Parameter",
+            "AUTHZ_HEADER": "Authorization Header"
+          },
+          "multivalued": false
+        },
+        "bearerIdentifier": {
+          "title": "Token Bearer Identifier",
+          "description": "Custom header name, shared state variable, or URL parameter name. Leave blank for standard authorization header",
+          "type": "STRING",
+          "required": false,
+          "multivalued": false
+        },
+        "saveResults": {
+          "title": "Save Result to State",
+          "description": "Save entire introspection result to shared state - variable tokenIntrospectResult",
+          "type": "BOOLEAN",
+          "required": false,
+          "defaultValue": false,
+          "multivalued": false
+        },
+        "mapAttributesToState": {
+          "title": "Map Claims to Journey State",
+          "description": "Map introspection results to shared or transient state properties. Key is the shared state property, Value is the introspect claim name - e.g. Key: username, Value: user_id, or Key: objectAttributes.mail, Value: email",
+          "type": "OBJECT",
+          "required": false,
+          "multivalued": false
+        },
+        "requiredClaims": {
+          "title": "Required Claims",
+          "description": "Required claims and their values in introspect results - Key is required claim name, Value is the required value - e.g. Key: client_id, Value: mobileApp",
+          "type": "OBJECT",
+          "required": false,
+          "multivalued": false
+        },
+        "allowedClients": {
+          "title": "Allowed Clients",
+          "description": "Restrict access to known OAuth2 clients. Leave empty for all clients",
+          "type": "STRING",
+          "required": false,
+          "multivalued": true
+        }
+      }
+    }
+  }
+}

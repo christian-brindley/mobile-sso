@@ -1,0 +1,107 @@
+{
+  "meta": {
+    "origin": "https://openam-brindley.forgeblocks.com/platform/?realm=alpha#/journeys/Mobile%20SSO%20-%20Login",
+    "exportedBy": "christian.brindley@pingidentity.com",
+    "exportDate": "2026-02-04T17:20:02.595Z",
+    "exportTool": "platform-admin ui tree export",
+    "exportToolVersion": "1.0",
+    "treesSelectedForExport": [
+      "Mobile SSO - Login"
+    ],
+    "innerTreesIncluded": []
+  },
+  "trees": {
+    "Mobile SSO - Login": {
+      "tree": {
+        "_id": "Mobile SSO - Login",
+        "_rev": "-648387722",
+        "identityResource": "managed/alpha_user",
+        "entryNodeId": "36a3dcdd-1e93-4ac3-ab47-ccbcf0d02df9",
+        "innerTreeOnly": false,
+        "noSession": false,
+        "mustRun": false,
+        "enabled": true,
+        "transactionalOnly": false,
+        "uiConfig": {
+          "categories": "[]",
+          "annotations": "{\"forNodes\":{},\"structural\":[]}"
+        },
+        "nodes": {
+          "36a3dcdd-1e93-4ac3-ab47-ccbcf0d02df9": {
+            "x": 210,
+            "y": 80,
+            "connections": {
+              "true": "70e691a5-1e33-4ac3-a356-e7b6d60d92e0"
+            },
+            "nodeType": "ScriptedDecisionNode",
+            "displayName": "NOOP"
+          }
+        },
+        "staticNodes": {
+          "startNode": {
+            "x": 70,
+            "y": 80
+          },
+          "70e691a5-1e33-4ac3-a356-e7b6d60d92e0": {
+            "x": 467,
+            "y": 80
+          },
+          "e301438c-0bd0-429c-ab0c-66126501069a": {
+            "x": 70,
+            "y": 230
+          }
+        }
+      },
+      "nodes": {
+        "36a3dcdd-1e93-4ac3-ab47-ccbcf0d02df9": {
+          "_id": "36a3dcdd-1e93-4ac3-ab47-ccbcf0d02df9",
+          "_rev": "1677162087",
+          "script": "b7008209-a2e6-4185-b80d-7ec683804ccd",
+          "outcomes": [
+            "true"
+          ],
+          "outputs": [
+            "*"
+          ],
+          "inputs": [
+            "*"
+          ],
+          "_type": {
+            "_id": "ScriptedDecisionNode",
+            "name": "Scripted Decision",
+            "collection": true,
+            "version": "1.0"
+          },
+          "_outcomes": [
+            {
+              "id": "true",
+              "displayName": "true"
+            }
+          ]
+        }
+      },
+      "innerNodes": {},
+      "scripts": {
+        "b7008209-a2e6-4185-b80d-7ec683804ccd": {
+          "_id": "b7008209-a2e6-4185-b80d-7ec683804ccd",
+          "name": "demo-dummy",
+          "description": null,
+          "script": "\"/*\\n * Copyright 2024-2025 Ping Identity Corporation. All Rights Reserved\\n *\\n * This code is to be used exclusively in connection with Ping Identity\\n * Corporation software or services. Ping Identity Corporation only offers\\n * such software or services to legal entities who have entered into a\\n * binding license agreement with Ping Identity Corporation.\\n */\\n/*\\n  - Data made available by nodes that have already executed is available in the nodeState variable.\\n  - Use the action object to set the outcome of the node.\\n */\\n\\naction.goTo(\\\"true\\\");\"",
+          "default": false,
+          "language": "JAVASCRIPT",
+          "context": "AUTHENTICATION_TREE_DECISION_NODE",
+          "createdBy": "id=c2d4610e-e014-4539-b76e-20b61f8db263,ou=user,ou=am-config",
+          "creationDate": 1769883085997,
+          "lastModifiedBy": "id=c2d4610e-e014-4539-b76e-20b61f8db263,ou=user,ou=am-config",
+          "lastModifiedDate": 1769883085997,
+          "evaluatorVersion": "2.0"
+        }
+      },
+      "emailTemplates": {},
+      "socialIdentityProviders": {},
+      "themes": [],
+      "saml2Entities": {},
+      "circlesOfTrust": {}
+    }
+  }
+}
