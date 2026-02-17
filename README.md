@@ -10,18 +10,15 @@ Refer to the [associated blog](https://medium.com/@christian.brindley/wwwhoosh-c
 
 The repository contains the following directories
 
-- `journeys`
-  Two journeys for the initiation of the SSO request, and the follow on backchannel journey:
-  `Mobile SSO - Initialise-journeyExport.json`
-  `Mobile SSO - Login-journeyExport.json`
+- <b>journeys</b>: Two journeys for the initiation of the SSO request, and the follow on backchannel journey:
+  - `Mobile SSO - Initialise-journeyExport.json`
+  - `Mobile SSO - Login-journeyExport.json`
 
-- `custom-nodes`
-  Sample custom nodes included in the initialisation journey:
-  `DEMO Headers to State-node.json`
-  `DEMO OAuth2 Introspect-nodejson`
+- <b>custom-nodes</b>: Sample custom nodes included in the initialisation journey:
+  - `DEMO Headers to State-node.json`
+  - `DEMO OAuth2 Introspect-nodejson`
 
-- `ios`
-  Sample Swift code to merge with the demonstration iOS app included with the Ping SDK.
+- <b>ios</b>: Sample customisations to the demonstration iOS app included with the Ping SDK sample apps repo.
 
 ## Requirements
 
@@ -54,7 +51,7 @@ Next, use the PingOne AIC admin console to [import the two custom nodes](https:/
 
 ### Journeys
 
-Now use the PingOne AIC admin console to [import](https://docs.pingidentity.com/pingoneaic/journeys/journeys.html#import-journeys) the two journeys in the `journeys` directory of this repository.
+Now use the [PingOne AIC admin console](https://docs.pingidentity.com/pingoneaic/journeys/journeys.html#import-journeys) to import the two journeys from the `journeys` directory of this repository:
 
 - Mobile SSO - Initialise-journeyExport.json
 - Mobile SSO - Login-journeyExport.json
@@ -77,7 +74,7 @@ Open the `Mobile SSO - Login` journey in the admin console.
 
 ![Login journey](images/journey-login.png "Login Journey")
 
-Note that this is pretty minimal. The `Validation` node is a placeholder for any logic you want to apply to the backchannel login process, such as IP address correlation, fraud checks etc.
+Note that this is pretty minimal. The `Validation` node is a placeholder for any logic you want to apply to the backchannel login process, such as IP address correlation, risk checks etc.
 
 ## Mobile app integration
 
