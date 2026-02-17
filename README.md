@@ -1,8 +1,15 @@
 # Mobile to web SSO with PingOne Identity Cloud
 
+## Disclaimer
+
+THE CODE HEREIN IS PROVIDED "AS IS" AND WITHOUT WARRANTY OF ANY KIND. SUCH CODE IS EXPRESSLY EXCLUDED FROM PING IDENTITY'S INDEMNITY OR SUPPORT OBLIGATIONS, IF ANY, PURSUANT TO THE RELEVANT GOVERNING AGREEMENT. PING IDENTITY AND ITS LICENSORS EXPRESSLY DISCLAIM ALL WARRANTIES, WHETHER
+EXPRESS, IMPLIED OR STATUTORY, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND ANY
+WARRANTY OF NON-INFRINGEMENT. PING IDENTITY SHALL NOT HAVE ANY LIABILITY ARISING OUT OF OR RELATING TO ANY USE, IMPLEMENTATION OR CONFIGURATION OF THE SAMPLE CODE HEREUNDER.
+
 ## Introduction
 
-This repository contains sample artefacts for demonstrating how to enable single signon between a mobile app and a webview launched from the app, using PingOne Advanced Identity Cloud (or a version of PingAM which supports Backchannel Authentication).
+This repository contains sample artefacts for demonstrating single signon between a mobile app and a webview launched from the app, using [PingOne Advanced Identity Cloud ](https://www.pingidentity.com/en/platform/pingone-advanced-identity-cloud.html)(or a version of PingAM which supports Backchannel Authentication).
 
 Refer to the [associated blog](https://medium.com/@christian.brindley/wwwhoosh-creating-a-mobile-launchpad-for-your-web-apps-using-ping-advanced-identity-cloud-79a7faa095ed) for more background.
 
@@ -64,9 +71,9 @@ Configure the first node - `OAuth2 Introspect` - with the following:
 
 ![Introspect Node](images/node-introspect.png "OAuth2 Introspect Node")
 
-- Client ID and secret for the introspect OAuth2 client (you need to use an ESV for the secret once everything is working)
+- Client ID and secret for the introspect OAuth2 client (you should use an ESV for the secret once everything is working)
 - Client Authentication set to POST or BASIC depending on your client configuration
-- Introspect endpoint set to the public URL for the realm instrospect URL - e.g. `https://openam-demo.forgeblocks.com/am/oauth2/realms/root/realms/alpha/introspect` (you need to use an ESV for the FQDN part once everything is working)
+- Introspect endpoint set to the public URL for the realm instrospect URL - e.g. `https://openam-demo.forgeblocks.com/am/oauth2/realms/root/realms/alpha/introspect` (you should use an ESV for the FQDN part once everything is working)
 
 The remaining configuration can be left as is. Note that the demo journey assumes that the mobile access token includes a `user_id` claim with the user's UUID as its value. This is stored in the shared state of the backchannel journey so that the correct user is logged in.
 
@@ -74,7 +81,7 @@ Open the `Mobile SSO - Login` journey in the admin console.
 
 ![Login journey](images/journey-login.png "Login Journey")
 
-Note that this is pretty minimal. The `Validation` node is a placeholder for any logic you want to apply to the backchannel login process, such as IP address correlation, risk checks etc.
+Note that this journey is pretty minimal. All the required context - i.e. the username and target app URL - are preloaded by the initialisation journey. The `Validation` node is a placeholder for any logic you want to apply to the backchannel login process, such as IP address correlation, risk checks etc.
 
 ## Mobile app integration
 
@@ -99,13 +106,13 @@ Now update the source files with the versions supplied in the `ios` directory of
 	<string>https://openam-demo.forgeblocks.com/am/json/realms/root/realms/alpha/authenticate?authIndexType=service&amp;authIndexValue=Mobile%20SSO%20-%20Initialise</string>
 ```
 
-where `openam-demo.forgeblocks.com` is replaced with your PingOne AIC tenant domain name.
+Replace `openam-demo.forgeblocks.com` with your PingOne AIC tenant domain name.
 
 ### Test
 
 After the updates are applied, you should see an additional section in the app main menu, called "Launch Pad". This section should contain a single menu item called "User Dashboard".
 
-To test, first tap the Journey Flow menu item and log in. Then tap the User Dashboard menu and this should launch the PingOne AIC end user dashboard app.
+To test, first tap the Journey Flow menu item and log in. Then tap the User Dashboard menu and this should launch the PingOne AIC end user dashboard app, automatically logged into the same user as the app.
 
 ![Updated App](images/app.png "Updated App")
 

@@ -1,7 +1,7 @@
 // Disclaimer
 //
 // THE CODE HEREUNDER IS PROVIDED "AS IS" AND WITHOUT WARRANTY OF ANY KIND.
-// SUCH CODE IS EXPRESSLY EXCLUDED FROM FORGEROCK'S INDEMNITY OR SUPPORT
+// SUCH CODE IS EXPRESSLY EXCLUDED FROM PING IDENTITY'S INDEMNITY OR SUPPORT
 // OBLIGATIONS, IF ANY, PURSUANT TO THE RELEVANT GOVERNING AGREEMENT.
 // PING IDENTITY AND ITS LICENSORS EXPRESSLY DISCLAIM ALL WARRANTIES, WHETHER
 // EXPRESS, IMPLIED OR STATUTORY, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
@@ -50,7 +50,7 @@ struct WebViewScreen: View {
     }
     
     
-    // MARK: - OTP Flow
+    // MARK: - SSO Flow
 
     private func loadSsoUrl(targetUrl: String) async {
         do {
@@ -74,7 +74,7 @@ struct WebViewScreen: View {
                 throw URLError(.badServerResponse)
             }
 
-            let decoded = try JSONDecoder().decode(OTPResponse.self, from: data)
+            let decoded = try JSONDecoder().decode(SSOResponse.self, from: data)
             finalURL = URL(string: decoded.successUrl)!
         } catch {
             errorMessage = "Failed to load page"
@@ -82,7 +82,7 @@ struct WebViewScreen: View {
         }
     }
 
-    private struct OTPResponse: Decodable {
+    private struct SSOResponse: Decodable {
         let successUrl: String
     }
     
