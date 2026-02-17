@@ -35,7 +35,7 @@ To run this demo, you will need
 - The [Ping SDK sample app repository](https://github.com/ForgeRock/sdk-sample-apps)
 - Xcode
 
-## Platform configuration
+## PingOne AIC Platform configuration
 
 Platform configuration involves the following
 
@@ -81,7 +81,7 @@ Open the `Mobile SSO - Login` journey in the admin console.
 
 ![Login journey](images/journey-login.png "Login Journey")
 
-Note that this journey is pretty minimal. All the required context - i.e. the username and target app URL - are preloaded by the initialisation journey. The `Validation` node is a placeholder for any logic you want to apply to the backchannel login process, such as IP address correlation, risk checks etc.
+Note that this journey is pretty minimal. All the required context - i.e. the username and target app URL - are preloaded by the initialisation journey. The `Validation` node is a placeholder for any additional logic you want to apply to the backchannel login process, such as IP address correlation, risk checks etc.
 
 ## Mobile app integration
 
