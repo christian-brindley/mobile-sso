@@ -5,9 +5,7 @@
     "exportDate": "2026-02-04T17:18:55.575Z",
     "exportTool": "platform-admin ui tree export",
     "exportToolVersion": "1.0",
-    "treesSelectedForExport": [
-      "Mobile SSO - Initialise"
-    ],
+    "treesSelectedForExport": ["Mobile SSO - Initialise"],
     "innerTreesIncluded": []
   },
   "trees": {
@@ -294,7 +292,7 @@
           "bearerType": "AUTHZ_HEADER",
           "clientId": "demo-introspect",
           "saveResults": true,
-          "introspectEndpoint": "https://&{esv.fqdn}/am/oauth2/realms/root/realms/alpha/introspect",
+          "introspectEndpoint": "https://openam-demo.forgeblocks.com/am/oauth2/realms/root/realms/alpha/introspect",
           "_type": {
             "_id": "designer-oauth2introspect",
             "name": "OAuth2 Introspect",
@@ -352,15 +350,9 @@
           "_id": "d9fb69dc-9a5a-4680-9f89-3a0d7d9c734b",
           "_rev": "-1019848223",
           "script": "dd0d6406-0e1a-4770-acee-96310d9de3c1",
-          "outcomes": [
-            "true"
-          ],
-          "outputs": [
-            "*"
-          ],
-          "inputs": [
-            "*"
-          ],
+          "outcomes": ["true"],
+          "outputs": ["*"],
+          "inputs": ["*"],
           "_type": {
             "_id": "ScriptedDecisionNode",
             "name": "Scripted Decision",
